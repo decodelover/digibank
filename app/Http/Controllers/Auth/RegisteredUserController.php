@@ -138,7 +138,7 @@ class RegisteredUserController extends Controller
             'email' => $formData['email'],
             'password' => Hash::make($formData['password']),
             'custom_fields_data' => data_get($formData, 'custom_fields_data', []),
-            'kyc' => Kyc::where('status', 1)->exists() ? KYCStatus::NOT_SUBMITTED : KYCStatus::Verified,
+            'kyc' => KYCStatus::NOT_SUBMITTED,
 
         ];
         $user = User::create($regiData);

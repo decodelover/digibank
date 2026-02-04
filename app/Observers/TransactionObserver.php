@@ -40,37 +40,41 @@ class TransactionObserver
      */
     protected function sendTransactionEmail(Transaction $transaction): void
     {
-        $user = $transaction->user;
-        
-        if (!$user || !$user->email) {
-            return;
-        }
+        try {
+            $user = $transaction->user;
+            
+            if (!$user || !$user->email) {
+                return;
+            }
 
-        $currency = setting('site_currency', 'global');
-        $shortcodes = $this->getBaseShortcodes($transaction, $user, $currency);
+            $currency = setting('site_currency', 'global') ?? 'USD';
+            $shortcodes = $this->getBaseShortcodes($transaction, $user, $currency);
 
-        switch ($transaction->type) {
-            case TxnType::Deposit:
-            case TxnType::ManualDeposit:
-                // All deposits (user or admin) send deposit email
-                $this->sendDepositEmail($transaction, $user, $shortcodes);
-                break;
+            switch ($transaction->type) {
+                case TxnType::Deposit:
+                case TxnType::ManualDeposit:
+                    // All deposits (user or admin) send deposit email
+                    $this->sendDepositEmail($transaction, $user, $shortcodes);
+                    break;
 
-            case TxnType::Withdraw:
-            case TxnType::WithdrawAuto:
-            case TxnType::Subtract:
-                // All withdrawals and subtractions send withdrawal email
-                $this->sendWithdrawalEmail($transaction, $user, $shortcodes);
-                break;
+                case TxnType::Withdraw:
+                case TxnType::WithdrawAuto:
+                case TxnType::Subtract:
+                    // All withdrawals and subtractions send withdrawal email
+                    $this->sendWithdrawalEmail($transaction, $user, $shortcodes);
+                    break;
 
-            case TxnType::SendMoney:
-            case TxnType::FundTransfer:
-                $this->sendTransferSentEmail($transaction, $user, $shortcodes);
-                break;
+                case TxnType::SendMoney:
+                case TxnType::FundTransfer:
+                    $this->sendTransferSentEmail($transaction, $user, $shortcodes);
+                    break;
 
-            case TxnType::ReceiveMoney:
-                $this->sendTransferReceivedEmail($transaction, $user, $shortcodes);
-                break;
+                case TxnType::ReceiveMoney:
+                    $this->sendTransferReceivedEmail($transaction, $user, $shortcodes);
+                    break;
+            }
+        } catch (\Exception $e) {
+            \Log::error('TransactionObserver email error: ' . $e->getMessage());
         }
     }
 
@@ -79,16 +83,24 @@ class TransactionObserver
      */
     protected function getBaseShortcodes(Transaction $transaction, $user, string $currency): array
     {
+        // Handle date formatting safely
+        $date = $transaction->created_at;
+        if (is_string($date)) {
+            $date = \Carbon\Carbon::parse($date);
+        } elseif (!$date) {
+            $date = now();
+        }
+
         return [
-            '[[full_name]]' => $user->full_name,
-            '[[amount]]' => number_format($transaction->amount, 2),
+            '[[full_name]]' => $user->full_name ?? 'Customer',
+            '[[amount]]' => number_format($transaction->amount ?? 0, 2),
             '[[currency]]' => $currency,
-            '[[txn_id]]' => $transaction->tnx,
-            '[[new_balance]]' => number_format($user->balance, 2),
-            '[[date]]' => $transaction->created_at->format('M d, Y h:i A'),
-            '[[description]]' => $transaction->description,
-            '[[method]]' => $transaction->method,
-            '[[charge]]' => number_format($transaction->charge, 2),
+            '[[txn_id]]' => $transaction->tnx ?? 'N/A',
+            '[[new_balance]]' => number_format($user->balance ?? 0, 2),
+            '[[date]]' => $date->format('M d, Y h:i A'),
+            '[[description]]' => $transaction->description ?? '',
+            '[[method]]' => $transaction->method ?? 'System',
+            '[[charge]]' => number_format($transaction->charge ?? 0, 2),
             '[[dashboard_link]]' => route('user.dashboard'),
             '[[site_title]]' => setting('site_title', 'global'),
             '[[site_url]]' => route('home'),
