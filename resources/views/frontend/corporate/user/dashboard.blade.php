@@ -48,6 +48,46 @@
                 </div>
                 <div class="o">O</div>
             </div>
+
+            {{-- Bank Account Details Card --}}
+            @if(auth()->user()->bankAccount)
+            <div class="site-card mt-3">
+                <div class="site-card-header">
+                    <div class="title"><i data-lucide="landmark"></i> {{ __('Your Bank Account Details') }}</div>
+                </div>
+                <div class="site-card-body p-0">
+                    <div class="site-custom-table site-custom-table-sm">
+                        <div class="contents">
+                            @php $bankAccount = auth()->user()->bankAccount; @endphp
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('Bank Name') }}</strong></div>
+                                <div class="site-table-col">{{ $bankAccount->bank_name }}</div>
+                            </div>
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('Account Name') }}</strong></div>
+                                <div class="site-table-col">{{ $bankAccount->account_name }}</div>
+                            </div>
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('Account Number') }}</strong></div>
+                                <div class="site-table-col"><code>{{ $bankAccount->account_number }}</code></div>
+                            </div>
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('Routing Number') }}</strong></div>
+                                <div class="site-table-col"><code>{{ $bankAccount->routing_number }}</code></div>
+                            </div>
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('SWIFT Code') }}</strong></div>
+                                <div class="site-table-col"><code>{{ $bankAccount->swift_code }}</code></div>
+                            </div>
+                            <div class="site-table-list">
+                                <div class="site-table-col"><strong>{{ __('IBAN') }}</strong></div>
+                                <div class="site-table-col"><code>{{ $bankAccount->iban }}</code></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
         <div class="col-xl-8 col-lg-12 col-md-12 col-12">
             <div class="row">

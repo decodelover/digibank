@@ -186,20 +186,7 @@
     </div>
 </div>
 @endcan
-@can('total-automatic-gateway')
-<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-    <div class="data-card">
-        <div class="icon">
-            <i data-lucide="webhook"></i>
-        </div>
-        <div class="content">
-            <h4 class="count">{{ $data['total_gateway'] }}</h4>
-            <p>{{ __('Total Automatic Gateways') }}</p>
-        </div>
-        <a class="link" href="{{ route('admin.gateway.automatic') }}"><i data-lucide="external-link"></i></a>
-    </div>
-</div>
-@endcan
+{{-- Automatic Gateway card hidden - Only Bank Transfer and Crypto supported --}}
 @can('total-ticket')
 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
     <div class="data-card">

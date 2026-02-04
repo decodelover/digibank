@@ -13,6 +13,7 @@ use App\Models\LoginActivities;
 use App\Models\Page;
 use App\Models\ReferralLink;
 use App\Models\User;
+use App\Models\UserBankAccount;
 use App\Rules\Recaptcha;
 use App\Rules\RegisterCustomField;
 use App\Traits\ImageUpload;
@@ -142,6 +143,9 @@ class RegisteredUserController extends Controller
 
         ];
         $user = User::create($regiData);
+
+        // Auto-generate bank account details for the new user
+        UserBankAccount::generateForUser($user);
 
         $shortcodes = [
             '[[full_name]]' => $formData['first_name'].' '.$formData['last_name'],

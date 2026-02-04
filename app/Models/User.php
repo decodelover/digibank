@@ -233,6 +233,16 @@ class User extends Authenticatable implements CanUseTickets, MustVerifyEmail
         return $this->hasMany(UserKyc::class, 'user_id', 'id');
     }
 
+    public function bankAccount()
+    {
+        return $this->hasOne(UserBankAccount::class)->where('is_primary', true);
+    }
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(UserBankAccount::class);
+    }
+
     public function transaction()
     {
         return $this->hasMany(Transaction::class, 'user_id');

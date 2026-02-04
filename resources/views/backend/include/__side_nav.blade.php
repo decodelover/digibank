@@ -476,7 +476,7 @@
 
             {{-- ************************************************************* Essentials
             ********************************************************* --}}
-            @canany(['automatic-gateway-manage', 'manual-gateway-manage', 'deposit-list', 'deposit-action',
+            @canany(['manual-gateway-manage', 'deposit-list', 'deposit-action',
                 'withdraw-list', 'withdraw-method-manage', 'withdraw-action', 'referral-create', 'manage-referral',
                 'referral-edit', 'referral-delete', 'manage-portfolio', 'portfolio-edit', 'portfolio-create',
                 'reward-earning-list', 'reward-earning-create', 'reward-earning-edit', 'reward-earning-delete',
@@ -486,14 +486,8 @@
                     <span>{{ __('Essentials') }}</span>
                 </li>
 
-                @canany(['automatic-gateway-manage', 'manual-gateway-manage', 'deposit-list', 'deposit-action'])
-                    @can('automatic-gateway-manage')
-                        <li class="side-nav-item {{ isActive('admin.gateway*') }}">
-                            <a href="{{ route('admin.gateway.automatic') }}"><i
-                                    data-lucide="door-open"></i><span>{{ __('Automatic
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Gateways') }}</span></a>
-                        </li>
-                    @endcan
+                @canany(['manual-gateway-manage', 'deposit-list', 'deposit-action'])
+                    {{-- Automatic Gateways hidden - Only Bank Transfer and Crypto supported --}}
 
                     <li class="side-nav-item side-nav-dropdown {{ isActive(['admin.deposit*']) }}">
                         <a href="javascript:void(0);" class="dropdown-link"><i
@@ -501,23 +495,18 @@
                                 class="right-arrow"><i data-lucide="chevron-down"></i></span></a>
                         <ul class="dropdown-items">
 
-                            @can('automatic-gateway-manage')
-                                <li class="{{ isActive('admin.deposit.method.list', 'auto') }}"><a
-                                        href="{{ route('admin.deposit.method.list', 'auto') }}"><i
-                                            data-lucide="workflow"></i>{{ __('Automatic Methods') }}</a></li>
-                            @endcan
+                            {{-- Automatic Methods hidden - Only manual methods (Bank Transfer & Crypto) available --}}
 
                             @can('manual-gateway-manage')
                                 <li class="{{ isActive('admin.deposit.method.list', 'manual') }}"><a
                                         href="{{ route('admin.deposit.method.list', 'manual') }}"><i
-                                            data-lucide="compass"></i>{{ __('Manual Methods') }}</a></li>
+                                            data-lucide="compass"></i>{{ __('Payment Methods') }}</a></li>
                             @endcan
 
                             @canany(['deposit-list', 'deposit-action'])
                                 <li class="{{ isActive('admin.deposit.manual.pending') }}"><a
                                         href="{{ route('admin.deposit.manual.pending') }}"><i
-                                            data-lucide="columns"></i>{{ __('Pending
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Manual Deposits') }}</a>
+                                            data-lucide="columns"></i>{{ __('Pending Deposits') }}</a>
                                 </li>
                                 <li class="{{ isActive('admin.deposit.history') }}"><a
                                         href="{{ route('admin.deposit.history') }}"><i
