@@ -24,7 +24,7 @@ class PaymentMethodSeeder extends Seeder
         $depositMethods = [
             [
                 'gateway_id' => null,
-                'logo' => null,
+                'logo' => 'global/gateway/paypal.png', // placeholder - replace with bank icon
                 'name' => 'Bank Transfer',
                 'type' => 'manual',
                 'gateway_code' => 'bank_transfer',
